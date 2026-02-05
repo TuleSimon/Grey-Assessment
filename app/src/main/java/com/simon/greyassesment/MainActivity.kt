@@ -9,7 +9,9 @@ import com.simon.greyassesment.features.learnpath.screens.BadgeState
 import com.simon.greyassesment.features.learnpath.screens.LearningPathScreen
 import com.simon.greyassesment.features.learnpath.screens.LevelNode
 import com.simon.greyassesment.ui.theme.GreyAssesmentTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
