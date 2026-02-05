@@ -1,58 +1,101 @@
 package com.simon.greyassesment.ui.theme
 
 import android.app.Activity
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary = buttonContainerColor,
+    onPrimary = buttonPrimaryText,
+    primaryContainer = purple100,
+    onPrimaryContainer = purple600,
+    secondary = purple500,
+    onSecondary = iconInverse,
+    secondaryContainer = purple100,
+    onSecondaryContainer = purple600,
+    tertiary = homeIconTint,
+    onTertiary = iconInverse,
+    tertiaryContainer = homeIconContainer,
+    onTertiaryContainer = homeIconTint,
+    background = Color.White,
+    onBackground = textDefault,
+    surface = Color.White,
+    onSurface = textDefault,
+    surfaceVariant = LightGrey400,
+    onSurfaceVariant = textSoft,
+    outline = LightGrey400,
+    outlineVariant = homeBorderColor,
+    error = Color(0xFFB3261E),
+    onError = Color.White,
+    errorContainer = Color(0xFFF9DEDC),
+    onErrorContainer = Color(0xFF410E0B)
 )
+
+private val DarkColorScheme = darkColorScheme(
+    primary = buttonContainerColor,
+    onPrimary = buttonPrimaryText,
+    primaryContainer = purple600,
+    onPrimaryContainer = purple100,
+    secondary = purple500,
+    onSecondary = iconInverse,
+    secondaryContainer = purple600,
+    onSecondaryContainer = purple100,
+    tertiary = homeIconTint,
+    onTertiary = iconInverse,
+    tertiaryContainer = homeIconContainer,
+    onTertiaryContainer = homeIconTint,
+    background = Color(0xFF1B1F28),
+    onBackground = Color.White,
+    surface = Color(0xFF1B1F28),
+    onSurface = Color.White,
+    surfaceVariant = Color(0xFF2D3443),
+    onSurfaceVariant = LightGrey400,
+    outline = Color(0xFF49546C),
+    outlineVariant = Color(0xFF2D3443),
+    error = Color(0xFFF2B8B5),
+    onError = Color(0xFF601410),
+    errorContainer = Color(0xFF8C1D18),
+    onErrorContainer = Color(0xFFF9DEDC)
+)
+
+private val LightGreyColors = GreyColors()
+
+val MaterialTheme.greyColors: GreyColors
+    @Composable
+    @ReadOnlyComposable
+    get() = LocalGreyColors.current
+
+val MaterialTheme.greyTypography: GreyTypography
+    @Composable
+    @ReadOnlyComposable
+    get() = LocalGreyTypography.current
 
 @Composable
 fun GreyAssesmentTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    darkTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+    val colorScheme = LightColorScheme
+    val greyColors = LightGreyColors
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+
+    CompositionLocalProvider(
+        LocalGreyColors provides greyColors,
+        LocalGreyTypography provides GreyTypography()
+    ) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = Typography,
+            content = content
+        )
     }
-
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
 }
