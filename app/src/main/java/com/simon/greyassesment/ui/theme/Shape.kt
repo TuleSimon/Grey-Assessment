@@ -26,7 +26,7 @@ data class GreyShapes(
 
     // Specific component shapes
     val button: RoundedCornerShape = RoundedCornerShape(8.dp),
-    val card: RoundedCornerShape = RoundedCornerShape(12.dp),
+    val card: RoundedCornerShape = RoundedCornerShape(8.dp),
     val bottomSheet: RoundedCornerShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
     val dialog: RoundedCornerShape = RoundedCornerShape(16.dp),
     val textField: RoundedCornerShape = RoundedCornerShape(8.dp),
