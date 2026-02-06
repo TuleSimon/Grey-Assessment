@@ -13,7 +13,8 @@ object LearningPathMapper {
             title = path.title,
             state = mapPathStatusToBadgeState(path),
             icon = path.icon,
-            subTitle = path.currentTopic?.title
+            subTitle = path.currentTopic?.title,
+            badge = path.badge
         )
     }
 

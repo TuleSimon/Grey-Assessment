@@ -7,6 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -38,17 +39,24 @@ import androidx.compose.ui.unit.sp
 import kotlin.math.abs
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.simon.greyassesment.R
+import com.simon.greyassesment.domain.model.Badge
+import com.simon.greyassesment.features.home.presentation.components.share
 import com.simon.greyassesment.ui.theme.GreyAssesmentTheme
 import com.simon.greyassesment.ui.theme.greyColors
 import com.simon.greyassesment.ui.theme.greyTypography
@@ -67,6 +75,7 @@ data class LevelNode(
     val state: BadgeState,
     val icon: Int,
     val subTitle: String? = null,
+    val badge: Badge? = null
 )
 
 object LearningPathConfig {
@@ -79,20 +88,20 @@ object LearningPathConfig {
 }
 
 @Composable
-fun PathsCustomComponentBySimon(levels: List<LevelNode>,  shouldAnimate:Boolean=true) {
+fun PathsCustomComponentBySimon(levels: List<LevelNode>, shouldAnimate: Boolean = true) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        SnakePathLayout(shouldAnimate,levels = levels)
+        SnakePathLayout(shouldAnimate, levels = levels)
     }
 }
 
 @Composable
 fun SnakePathLayout(
     //adding this for previews oo, so i can see my preview well
-    shouldAnimate:Boolean=true,
+    shouldAnimate: Boolean = true,
     levels: List<LevelNode>,
     modifier: Modifier = Modifier
 ) {
@@ -102,16 +111,16 @@ fun SnakePathLayout(
     val incompleteIconSizePx = with(density) { LearningPathConfig.INCOMPLETE_ICON_SIZE.toPx() }
     val verticalSpacingPx = with(density) { LearningPathConfig.VERTICAL_SPACING.toPx() }
 
-    val animationProgress = remember { Animatable(if(shouldAnimate)0f else 1f) }
+    val animationProgress = remember { Animatable(if (shouldAnimate) 0f else 1f) }
 
 
     val badgeScales = remember(levels.size) {
-        List(levels.size) { Animatable(if(shouldAnimate)0f else 1f) }
+        List(levels.size) { Animatable(if (shouldAnimate) 0f else 1f) }
     }
 
 
-    LaunchedEffect(levels.size,shouldAnimate) {
-        if(shouldAnimate) {
+    LaunchedEffect(levels.size, shouldAnimate) {
+        if (shouldAnimate) {
             badgeScales[0].animateTo(
                 targetValue = 1f,
                 animationSpec = spring(
@@ -148,7 +157,7 @@ fun SnakePathLayout(
         val widthPx = with(density) { width.toPx() }
         val minPaddingPx = with(density) { LearningPathConfig.MIN_HORIZONTAL_PADDING.toPx() }
         val textContainerWidthPx = with(density) { LearningPathConfig.TEXT_CONTAINER_WIDTH.toPx() }
-        val leftOffsetPx = with(density){11.dp.toPx()}
+        val leftOffsetPx = with(density) { 11.dp.toPx() }
         // Calculate how many items can fit per row
         val itemsPerRow = remember(widthPx) {
             calculateItemsPerRow(
@@ -173,7 +182,7 @@ fun SnakePathLayout(
 
         val rows = (levels.size + itemsPerRow - 1) / itemsPerRow
         val totalHeight = with(density) {
-            (rows * (verticalSpacingPx+leftOffsetPx)) + incompleteIconSizePx + 200.dp.toPx()
+            (rows * (verticalSpacingPx + leftOffsetPx)) + incompleteIconSizePx + 200.dp.toPx()
         }
 
         // Calculate icon center positions
@@ -189,12 +198,15 @@ fun SnakePathLayout(
                 } else {
                     colInRow
                 }
-                val verticalSpacingWithOffset = if(row>1) verticalSpacingPx+(leftOffsetPx * row/2) else verticalSpacingPx
-                val offsetDirection = if (row%2!=0) -1f else 1f
-                val horizontalSpacingWithOffset = if(row>0) with(density){10.dp.toPx()} * offsetDirection else 0f
+                val verticalSpacingWithOffset =
+                    if (row > 1) verticalSpacingPx + (leftOffsetPx * row / 2) else verticalSpacingPx
+                val offsetDirection = if (row % 2 != 0) -1f else 1f
+                val horizontalSpacingWithOffset =
+                    if (row > 0) with(density) { 10.dp.toPx() } * offsetDirection else 0f
 
                 val x = columnPositions[actualCol] + horizontalSpacingWithOffset
-                val y = if(colInRow==0) row * (verticalSpacingWithOffset - leftOffsetPx) + (incompleteIconSizePx / 2) else row * verticalSpacingWithOffset + (incompleteIconSizePx / 2)
+                val y =
+                    if (colInRow == 0) row * (verticalSpacingWithOffset - leftOffsetPx) + (incompleteIconSizePx / 2) else row * verticalSpacingWithOffset + (incompleteIconSizePx / 2)
 
                 Offset(x, y)
             }
@@ -359,6 +371,10 @@ fun LevelBadgeItem(
     level: LevelNode,
     iconSize: Dp
 ) {
+    val context = LocalContext.current
+    var showAchievement by rememberSaveable {
+        mutableStateOf<Badge??>(null)
+    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
@@ -397,6 +413,9 @@ fun LevelBadgeItem(
                 modifier = Modifier
                     .size(if (isCompleted) iconSize else iconSize - 14.dp)
                     .clip(CircleShape)
+                    .clickable {
+                        showAchievement = level.badge
+                    }
             )
         }
 
@@ -431,6 +450,13 @@ fun LevelBadgeItem(
                 modifier = Modifier.fillMaxWidth(0.7f)
             )
         }
+    }
+    if (showAchievement != null) {
+        BadgeAchievementBottomSheet(showAchievement!!, onDismiss = {
+            showAchievement = null
+        }, onShare = {
+            showAchievement?.share(context)
+        })
     }
 }
 
@@ -499,6 +525,6 @@ private fun LearningPathPreview() {
             )
         }
         // this preview hides the animation
-        PathsCustomComponentBySimon(levels,false)
+        PathsCustomComponentBySimon(levels, false)
     }
 }
