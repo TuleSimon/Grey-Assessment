@@ -65,7 +65,9 @@ data class GreyColors(
     // Home specific
     val homeIconContainer: Color = Color(0x1f2467e3),
     val homeIconTint: Color = Color(0xFF082F74),
-    val pathStroke: Color = Color(0x4d000000)
+    val pathStroke: Color = Color(0x4d000000),
+
+
 )
 
 val LocalGreyColors = staticCompositionLocalOf { GreyColors() }

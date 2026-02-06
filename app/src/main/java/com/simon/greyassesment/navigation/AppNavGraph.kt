@@ -41,13 +41,15 @@ fun AppNavGraph(
         }
 
         composable<LearningPathHomeScreenRoute>(
-            enterTransition = { fadeIn() + slideInVertically { it / 2 } },
+            enterTransition = { fadeIn() + slideInVertically { -it } },
             exitTransition = { fadeOut() + slideOutVertically { -it } },
             popExitTransition = { fadeOut() + slideOutVertically { -it } },
-            popEnterTransition = { fadeIn() + slideInVertically { it / 2 } }
+            popEnterTransition = { fadeIn() + slideInVertically { -it } }
         ) {
             val courseId = it.toRoute<LearningPathHomeScreenRoute>().courseId
-            LearningPathHomeScreen(courseId)
+            LearningPathHomeScreen(courseId) {
+                navController.navigateUp()
+            }
         }
 
 

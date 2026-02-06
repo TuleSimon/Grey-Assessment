@@ -27,11 +27,11 @@ import com.simon.greyassesment.ui.theme.greyShapes
 @Composable
 fun GreyButton(
     text: String,
-    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     icon: Painter? = null,
     iconContentDescription: String? = null,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    onClick: () -> Unit,
 ) {
     Button(
         onClick = onClick,

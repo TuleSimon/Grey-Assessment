@@ -1,7 +1,11 @@
 package com.simon.greyassesment.features.home.presentation.components
 
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,9 +21,14 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,14 +36,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import androidx.core.graphics.drawable.toBitmap
 import com.simon.greyassesment.R
 import com.simon.greyassesment.data.datasource.MockLearningDataSource
 import com.simon.greyassesment.domain.model.ActiveLearningPathSummary
+import com.simon.greyassesment.domain.model.Badge
+import com.simon.greyassesment.features.learnpath.presentation.components.BadgeAchievementBottomSheet
 import com.simon.greyassesment.ui.components.GreyButton
 import com.simon.greyassesment.ui.theme.GreyAssesmentTheme
 import com.simon.greyassesment.ui.theme.greyColors
 import com.simon.greyassesment.ui.theme.greyShapes
 import com.simon.greyassesment.ui.theme.greyTypography
+import java.io.File
+import java.io.FileOutputStream
 
 @Composable
 fun HomeScreenTaskDetailsSection(
@@ -42,6 +58,9 @@ fun HomeScreenTaskDetailsSection(
     activeLearningPath: ActiveLearningPathSummary?,
     navigateToFullPath: (String) -> Unit
 ) {
+    var showAchievement by rememberSaveable {
+        mutableStateOf<Badge??>(null)
+    }
 
     if (activeLearningPath != null) {
         Column(modifier) {
@@ -159,7 +178,10 @@ fun HomeScreenTaskDetailsSection(
                         Column(
                             Modifier
                                 .weight(1f)
-                                .padding(horizontal = 14.dp, vertical = 8.dp),
+                                .padding(horizontal = 14.dp, vertical = 8.dp)
+                                .clickable {
+                                    showAchievement = badge
+                                },
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Top
                         ) {
@@ -197,7 +219,15 @@ fun HomeScreenTaskDetailsSection(
                     }
                 }
             }
+        }
+        val context = LocalContext.current;
 
+        if (showAchievement != null) {
+            BadgeAchievementBottomSheet(showAchievement!!, onDismiss = {
+                showAchievement = null
+            }, onShare = {
+                showAchievement?.share(context)
+            })
         }
     }
 
@@ -224,4 +254,41 @@ private fun HomeScreenActivePathPreview() {
                 .padding(16.dp), summary
         ) {}
     }
+}
+
+fun Badge.share(context: Context) {
+    val drawable = ContextCompat.getDrawable(context, icon) ?: return
+
+    val bitmap = drawable.toBitmap(
+        drawable.intrinsicWidth.coerceAtLeast(1),
+        drawable.intrinsicHeight.coerceAtLeast(1),
+        Bitmap.Config.ARGB_8888
+    )
+
+    val cacheDir = File(context.cacheDir, "shared_badges").apply { mkdirs() }
+    val file = File(cacheDir, "badge_$id.png")
+
+    FileOutputStream(file).use {
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+    }
+
+    val uri = FileProvider.getUriForFile(
+        context,
+        "${context.packageName}.fileprovider",
+        file
+    )
+
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "image/png"
+        putExtra(Intent.EXTRA_STREAM, uri)
+        putExtra(
+            Intent.EXTRA_TEXT,
+            "$name\n\n$description"
+        )
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+
+    context.startActivity(
+        Intent.createChooser(intent, "Share badge")
+    )
 }

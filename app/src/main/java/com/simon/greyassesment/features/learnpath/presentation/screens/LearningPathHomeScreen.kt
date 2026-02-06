@@ -1,5 +1,6 @@
 package com.simon.greyassesment.features.learnpath.presentation.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -45,20 +46,21 @@ data class LearningPathHomeScreenRoute(
 @Composable
 fun LearningPathHomeScreen(
     courseId: String,
-    learningPathViewModel: LearningPathViewModel = hiltViewModel()
+    learningPathViewModel: LearningPathViewModel = hiltViewModel(),
+    onNavigateBack:()->Unit
 ) {
 
     LaunchedEffect(true) {
         learningPathViewModel.loadCourse(courseId)
     }
     val state = learningPathViewModel.uiState.collectAsStateWithLifecycle()
-    LearningPathHomeScreenContent(state.value)
+    LearningPathHomeScreenContent(state.value,onNavigateBack)
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LearningPathHomeScreenContent(state: LearningPathUiState) {
+private fun LearningPathHomeScreenContent(state: LearningPathUiState, onNavigateBack:()->Unit) {
     val activeCourse = state.course
     val activePath = activeCourse?.currentPath
 
@@ -78,9 +80,12 @@ private fun LearningPathHomeScreenContent(state: LearningPathUiState) {
                         painter = painterResource(R.drawable.top_arrow_back),
                         tint = MaterialTheme.greyColors.iconDefault,
                         contentDescription = "Back Arrow",
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp).clickable{
+                            onNavigateBack()
+                        }
                     )
                 }
+
             )
         }
     ) {
@@ -139,6 +144,6 @@ private fun PathScreenPreview() {
                 course = activeCourse,
                 paths = activeCourse.paths
             )
-        )
+        ){}
     }
 }

@@ -6,4 +6,5 @@
     <string name="badges">Badges</string>
     <string name="view_full_path">View full path</string>
     <string name="no_courses_found">No courses found</string>
+    <string name="flip_badge">Flip badge</string>
 </resources>
