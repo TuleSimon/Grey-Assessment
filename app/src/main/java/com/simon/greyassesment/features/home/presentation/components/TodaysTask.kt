@@ -34,7 +34,8 @@ import com.simon.greyassesment.ui.theme.greyShapes
 
 
 @Composable
-private fun TaskCardContent(task: DailyTask, modifier: Modifier) {
+fun TaskCardContent(task: DailyTask?, modifier: Modifier) {
+    if(task==null) return
     Card(
         modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -101,7 +102,7 @@ private fun TaskCardContent(task: DailyTask, modifier: Modifier) {
                 }
                 Spacer(Modifier.weight(1f))
                 Image(
-                    painter = painterResource(R.drawable.icon_arrow_right),
+                    painter = painterResource(R.drawable.right_curved),
                     contentDescription = "Badge",
                     modifier = Modifier.size(22.dp)
                 )

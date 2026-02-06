@@ -1,4 +1,4 @@
-package com.simon.greyassesment.features.home
+package com.simon.greyassesment.features.home.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

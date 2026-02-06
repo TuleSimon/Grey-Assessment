@@ -6,14 +6,27 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.simon.greyassesment.R
 
 // Aeonik Font Family
 val AeonikFontFamily = FontFamily(
+    Font(R.font.aeonik_air, FontWeight.W100),
+    Font(R.font.aeonik_air_italic, FontWeight.W100, FontStyle.Italic),
+    Font(R.font.aeonik_thin, FontWeight.Thin),
+    Font(R.font.aeonik_thin_italic, FontWeight.Thin, FontStyle.Italic),
+    Font(R.font.aeonik_light, FontWeight.Light),
+    Font(R.font.aeonik_light_italic, FontWeight.Light, FontStyle.Italic),
     Font(R.font.aeonik_regular, FontWeight.Normal),
-    Font(R.font.aeonik_bold, FontWeight.Bold)
+    Font(R.font.aeonik_regular_italic, FontWeight.Normal, FontStyle.Italic),
+    Font(R.font.aeonik_medium, FontWeight.Medium),
+    Font(R.font.aeonik_medium_italic, FontWeight.Medium, FontStyle.Italic),
+    Font(R.font.aeonik_bold, FontWeight.Bold),
+    Font(R.font.aeonik_bold_italic, FontWeight.Bold, FontStyle.Italic),
+    Font(R.font.aeonik_black, FontWeight.Black),
+    Font(R.font.aeonik_black_italic, FontWeight.Black, FontStyle.Italic)
 )
 
 val Typography = Typography(

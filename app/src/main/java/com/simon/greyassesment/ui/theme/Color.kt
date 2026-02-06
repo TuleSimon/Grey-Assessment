@@ -57,6 +57,7 @@ data class GreyColors(
 
     // Borders
     val border: Color = Color(0xFFE1E4EB),
+    val borderVariant: Color = Color(0xFFF0F2F5),
     val borderAccent: Color = Color(0xFFCFD3FB),
 
     // Home specific

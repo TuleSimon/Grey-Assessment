@@ -2,4 +2,7 @@
     <string name="app_name">Grey Assesment</string>
     <string name="you_re_closer_than_you_think">You’re closer than you think 💪🏾</string>
     <string name="for_today">For today</string>
+    <string name="active_learning_path">Active learning path</string>
+    <string name="badges">Badges</string>
+    <string name="view_full_path">View full path</string>
 </resources>

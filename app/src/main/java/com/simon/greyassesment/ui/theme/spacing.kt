@@ -5,7 +5,8 @@ import androidx.compose.ui.unit.dp
 
 object GreySpacing {
     val spacing16 = 16.dp
-    val spacing25 = 16.dp
+    val spacing25 = 25.dp
+    val spacing38 = 28.dp
     val spacing7 = 8.dp
     val spacing4 = 4.dp
 }
