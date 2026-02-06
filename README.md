@@ -13,7 +13,7 @@ A modern Android learning path application built with Jetpack Compose, demonstra
 ### Video Preview
 
 <p align="center">
-  <img src="video/screen_record.gif" alt="App Demo" width="300"/>
+  <img src="video/screen_record_full.gif" alt="App Demo" width="300"/>
 </p>
 
 ### Screenshots
