@@ -1,5 +1,9 @@
 package com.simon.greyassesment.features.learnpath.presentation.components
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -19,12 +22,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.PathMeasure
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -46,6 +52,7 @@ import com.simon.greyassesment.R
 import com.simon.greyassesment.ui.theme.GreyAssesmentTheme
 import com.simon.greyassesment.ui.theme.greyColors
 import com.simon.greyassesment.ui.theme.greyTypography
+import kotlinx.coroutines.delay
 
 
 sealed interface BadgeState {
@@ -63,27 +70,29 @@ data class LevelNode(
 )
 
 object LearningPathConfig {
-    val COMPLETED_ICON_SIZE = 70.dp
-    val INCOMPLETE_ICON_SIZE = 85.dp
-    val VERTICAL_SPACING = 160.dp
+    val COMPLETED_ICON_SIZE = 100.dp
+    val INCOMPLETE_ICON_SIZE = 105.dp
+    val VERTICAL_SPACING = 180.dp
     val STROKE_WIDTH = 1.5.dp
     val MIN_HORIZONTAL_PADDING = 16.dp
     val TEXT_CONTAINER_WIDTH = 130.dp
 }
 
 @Composable
-fun PathsCustomComponentBySimon(levels: List<LevelNode>) {
+fun PathsCustomComponentBySimon(levels: List<LevelNode>,  shouldAnimate:Boolean=true) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        SnakePathLayout(levels = levels)
+        SnakePathLayout(shouldAnimate,levels = levels)
     }
 }
 
 @Composable
 fun SnakePathLayout(
+    //adding this for previews oo, so i can see my preview well
+    shouldAnimate:Boolean=true,
     levels: List<LevelNode>,
     modifier: Modifier = Modifier
 ) {
@@ -93,12 +102,53 @@ fun SnakePathLayout(
     val incompleteIconSizePx = with(density) { LearningPathConfig.INCOMPLETE_ICON_SIZE.toPx() }
     val verticalSpacingPx = with(density) { LearningPathConfig.VERTICAL_SPACING.toPx() }
 
+    val animationProgress = remember { Animatable(if(shouldAnimate)0f else 1f) }
+
+
+    val badgeScales = remember(levels.size) {
+        List(levels.size) { Animatable(if(shouldAnimate)0f else 1f) }
+    }
+
+
+    LaunchedEffect(levels.size,shouldAnimate) {
+        if(shouldAnimate) {
+            badgeScales[0].animateTo(
+                targetValue = 1f,
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessMedium
+                )
+            )
+
+            // Then animate through each path segment
+            for (i in 0 until levels.size - 1) {
+                // Draw path segment
+                animationProgress.animateTo(
+                    targetValue = (i + 1).toFloat(),
+                    animationSpec = tween(durationMillis = 200)
+                )
+
+                // Small delay before badge pops
+                delay(50)
+
+                // Pop in next badge with bubble effect
+                badgeScales[i + 1].animateTo(
+                    targetValue = 1f,
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessMedium
+                    )
+                )
+            }
+        }
+    }
+
     BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
         val width = maxWidth
         val widthPx = with(density) { width.toPx() }
         val minPaddingPx = with(density) { LearningPathConfig.MIN_HORIZONTAL_PADDING.toPx() }
         val textContainerWidthPx = with(density) { LearningPathConfig.TEXT_CONTAINER_WIDTH.toPx() }
-
+        val leftOffsetPx = with(density){11.dp.toPx()}
         // Calculate how many items can fit per row
         val itemsPerRow = remember(widthPx) {
             calculateItemsPerRow(
@@ -123,7 +173,7 @@ fun SnakePathLayout(
 
         val rows = (levels.size + itemsPerRow - 1) / itemsPerRow
         val totalHeight = with(density) {
-            (rows * verticalSpacingPx) + incompleteIconSizePx + 200.dp.toPx()
+            (rows * (verticalSpacingPx+leftOffsetPx)) + incompleteIconSizePx + 200.dp.toPx()
         }
 
         // Calculate icon center positions
@@ -139,20 +189,25 @@ fun SnakePathLayout(
                 } else {
                     colInRow
                 }
+                val verticalSpacingWithOffset = if(row>1) verticalSpacingPx+(leftOffsetPx * row/2) else verticalSpacingPx
+                val offsetDirection = if (row%2!=0) -1f else 1f
+                val horizontalSpacingWithOffset = if(row>0) with(density){10.dp.toPx()} * offsetDirection else 0f
 
-                val x = columnPositions[actualCol]
-                val y = row * verticalSpacingPx + (incompleteIconSizePx / 2)
+                val x = columnPositions[actualCol] + horizontalSpacingWithOffset
+                val y = if(colInRow==0) row * (verticalSpacingWithOffset - leftOffsetPx) + (incompleteIconSizePx / 2) else row * verticalSpacingWithOffset + (incompleteIconSizePx / 2)
 
                 Offset(x, y)
             }
         }
 
-        // Layer 1: Canvas for connecting lines
+        // Layer 1: Canvas for connecting lines with progressive draw animation
         Canvas(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(with(density) { totalHeight.toDp() })
         ) {
+            val currentProgress = animationProgress.value
+
             for (i in 0 until levels.size - 1) {
                 val start = iconCenters[i]
                 val end = iconCenters[i + 1]
@@ -164,7 +219,16 @@ fun SnakePathLayout(
                     0f
                 )
 
-                val path = Path().apply {
+                // Calculate how much of this segment to draw
+                val segmentProgress = when {
+                    currentProgress >= i + 1 || !shouldAnimate -> 1f
+                    currentProgress > i -> currentProgress - i
+                    else -> 0f
+                }
+
+                if (segmentProgress <= 0f) continue
+
+                val fullPath = Path().apply {
                     val deltaY = end.y - start.y
 
                     moveTo(start.x, start.y)
@@ -172,17 +236,10 @@ fun SnakePathLayout(
                     if (abs(deltaY) < 10f) {
                         lineTo(end.x, end.y)
                     } else {
-                        // Curved arc between rows
-                        // Determine if we're on left or right side
                         val isStartOnLeft = start.x < centerLine
-
-                        // Curve should bulge outward from center
-                        // If on left side, curve left (negative offset)
-                        // If on right side, curve right (positive offset)
                         val curveDirection = if (isStartOnLeft) -1f else 1f
                         val swingOffset = 200f * curveDirection
 
-                        // Control points for smooth S-curve
                         val cp1X = start.x + swingOffset
                         val cp1Y = start.y + (deltaY * 0.2f)
 
@@ -197,8 +254,22 @@ fun SnakePathLayout(
                     }
                 }
 
+                // If segment is partial, extract only the drawn portion
+                val pathToDraw = if (segmentProgress < 1f) {
+                    val pathMeasure = PathMeasure()
+                    pathMeasure.setPath(fullPath, false)
+                    val pathLength = pathMeasure.length
+                    val stopDistance = pathLength * segmentProgress
+
+                    Path().also { partialPath ->
+                        pathMeasure.getSegment(0f, stopDistance, partialPath, true)
+                    }
+                } else {
+                    fullPath
+                }
+
                 drawPath(
-                    path = path,
+                    path = pathToDraw,
                     color = pathStrokeColor,
                     style = Stroke(
                         width = LearningPathConfig.STROKE_WIDTH.toPx(),
@@ -210,6 +281,7 @@ fun SnakePathLayout(
             }
         }
 
+        // Layer 2: Badges with scale animation
         iconCenters.forEachIndexed { index, offset ->
             val level = levels[index]
             val iconSize = if (level.state == BadgeState.COMPLETED) {
@@ -218,15 +290,21 @@ fun SnakePathLayout(
                 LearningPathConfig.INCOMPLETE_ICON_SIZE
             }
 
-
             val containerWidth = 130.dp
             val leftDp = with(density) { offset.x.toDp() } - (containerWidth / 2)
             val topDp = with(density) { offset.y.toDp() } - (iconSize / 2)
+
+            val scale = badgeScales[index].value
 
             Box(
                 modifier = Modifier
                     .offset(x = leftDp, y = topDp)
                     .width(containerWidth)
+                    .graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                        alpha = scale
+                    }
             ) {
                 LevelBadgeItem(level = level, iconSize = iconSize)
             }
@@ -420,6 +498,7 @@ private fun LearningPathPreview() {
                 LevelNode(10, "State Management", BadgeState.LOCKED, R.drawable.badge_not_started),
             )
         }
-        PathsCustomComponentBySimon(levels)
+        // this preview hides the animation
+        PathsCustomComponentBySimon(levels,false)
     }
 }

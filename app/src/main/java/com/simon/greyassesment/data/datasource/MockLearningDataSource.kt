@@ -73,6 +73,54 @@ object MockLearningDataSource {
         earnedAt = null
     )
 
+    private val apiIntegrationBadge = Badge(
+        id = "badge_api",
+        name = "API Expert",
+        icon = R.drawable.badge_not_started,
+        description = "Completed API Integration path",
+        earnedAt = null
+    )
+
+    private val databaseBadge = Badge(
+        id = "badge_database",
+        name = "Data Architect",
+        icon = R.drawable.badge_not_started,
+        description = "Completed Database & Storage path",
+        earnedAt = null
+    )
+
+    private val authSecurityBadge = Badge(
+        id = "badge_auth",
+        name = "Security Champion",
+        icon = R.drawable.badge_not_started,
+        description = "Completed Authentication & Security path",
+        earnedAt = null
+    )
+
+    private val testingBadge = Badge(
+        id = "badge_testing",
+        name = "Quality Guardian",
+        icon = R.drawable.badge_not_started,
+        description = "Completed Testing & Debugging path",
+        earnedAt = null
+    )
+
+    private val performanceBadge = Badge(
+        id = "badge_performance",
+        name = "Performance Ninja",
+        icon = R.drawable.badge_not_started,
+        description = "Completed App Performance path",
+        earnedAt = null
+    )
+
+    private val deploymentBadge = Badge(
+        id = "badge_deployment",
+        name = "Ship Master",
+        icon = R.drawable.badge_not_started,
+        description = "Completed Deployment & Publishing path",
+        earnedAt = null
+    )
+
 
     private val programmingBasicsPath = Path(
         id = "path_programming",
@@ -261,6 +309,192 @@ object MockLearningDataSource {
         )
     )
 
+    private val apiIntegrationPath = Path(
+        id = "path_api",
+        title = "API Integration",
+        description = "Connect your app to backend services",
+        icon = R.drawable.badge_not_started,
+        badge = apiIntegrationBadge,
+        orderIndex = 7,
+        isUnlocked = false,
+        topics = listOf(
+            Topic(
+                id = "topic_rest",
+                title = "REST APIs",
+                orderIndex = 0,
+                tasks = listOf(
+                    Task("task_27", "HTTP methods explained", isCompleted = false, orderIndex = 0),
+                    Task("task_28", "Making GET requests", isCompleted = false, orderIndex = 1),
+                    Task("task_29", "POST, PUT, DELETE", isCompleted = false, orderIndex = 2)
+                )
+            ),
+            Topic(
+                id = "topic_json",
+                title = "JSON Handling",
+                orderIndex = 1,
+                tasks = listOf(
+                    Task("task_30", "Parsing JSON responses", isCompleted = false, orderIndex = 0),
+                    Task("task_31", "Error handling", isCompleted = false, orderIndex = 1)
+                )
+            )
+        )
+    )
+
+    private val databasePath = Path(
+        id = "path_database",
+        title = "Database & Storage",
+        description = "Persist data locally and remotely",
+        icon = R.drawable.badge_not_started,
+        badge = databaseBadge,
+        orderIndex = 8,
+        isUnlocked = false,
+        topics = listOf(
+            Topic(
+                id = "topic_local_storage",
+                title = "Local Storage",
+                orderIndex = 0,
+                tasks = listOf(
+                    Task("task_32", "SharedPreferences basics", isCompleted = false, orderIndex = 0),
+                    Task("task_33", "Room database setup", isCompleted = false, orderIndex = 1),
+                    Task("task_34", "CRUD operations", isCompleted = false, orderIndex = 2)
+                )
+            ),
+            Topic(
+                id = "topic_cloud_storage",
+                title = "Cloud Storage",
+                orderIndex = 1,
+                tasks = listOf(
+                    Task("task_35", "Firebase Firestore", isCompleted = false, orderIndex = 0),
+                    Task("task_36", "Syncing data", isCompleted = false, orderIndex = 1)
+                )
+            )
+        )
+    )
+
+    private val authSecurityPath = Path(
+        id = "path_auth",
+        title = "Authentication & Security",
+        description = "Secure your app and users",
+        icon = R.drawable.badge_not_started,
+        badge = authSecurityBadge,
+        orderIndex = 9,
+        isUnlocked = false,
+        topics = listOf(
+            Topic(
+                id = "topic_auth",
+                title = "User Authentication",
+                orderIndex = 0,
+                tasks = listOf(
+                    Task("task_37", "Email/password auth", isCompleted = false, orderIndex = 0),
+                    Task("task_38", "OAuth and social login", isCompleted = false, orderIndex = 1),
+                    Task("task_39", "Token management", isCompleted = false, orderIndex = 2)
+                )
+            ),
+            Topic(
+                id = "topic_security",
+                title = "App Security",
+                orderIndex = 1,
+                tasks = listOf(
+                    Task("task_40", "Secure storage", isCompleted = false, orderIndex = 0),
+                    Task("task_41", "HTTPS and certificates", isCompleted = false, orderIndex = 1)
+                )
+            )
+        )
+    )
+
+    private val testingPath = Path(
+        id = "path_testing",
+        title = "Testing & Debugging",
+        description = "Build reliable, bug-free apps",
+        icon = R.drawable.badge_not_started,
+        badge = testingBadge,
+        orderIndex = 10,
+        isUnlocked = false,
+        topics = listOf(
+            Topic(
+                id = "topic_unit_tests",
+                title = "Unit Testing",
+                orderIndex = 0,
+                tasks = listOf(
+                    Task("task_42", "Writing your first test", isCompleted = false, orderIndex = 0),
+                    Task("task_43", "Mocking dependencies", isCompleted = false, orderIndex = 1),
+                    Task("task_44", "Test coverage", isCompleted = false, orderIndex = 2)
+                )
+            ),
+            Topic(
+                id = "topic_debugging",
+                title = "Debugging Techniques",
+                orderIndex = 1,
+                tasks = listOf(
+                    Task("task_45", "Using breakpoints", isCompleted = false, orderIndex = 0),
+                    Task("task_46", "Logging best practices", isCompleted = false, orderIndex = 1)
+                )
+            )
+        )
+    )
+
+    private val performancePath = Path(
+        id = "path_performance",
+        title = "App Performance",
+        description = "Optimize speed and efficiency",
+        icon = R.drawable.badge_not_started,
+        badge = performanceBadge,
+        orderIndex = 11,
+        isUnlocked = false,
+        topics = listOf(
+            Topic(
+                id = "topic_profiling",
+                title = "Performance Profiling",
+                orderIndex = 0,
+                tasks = listOf(
+                    Task("task_47", "Identifying bottlenecks", isCompleted = false, orderIndex = 0),
+                    Task("task_48", "Memory management", isCompleted = false, orderIndex = 1)
+                )
+            ),
+            Topic(
+                id = "topic_optimization",
+                title = "Optimization Techniques",
+                orderIndex = 1,
+                tasks = listOf(
+                    Task("task_49", "Lazy loading", isCompleted = false, orderIndex = 0),
+                    Task("task_50", "Image optimization", isCompleted = false, orderIndex = 1),
+                    Task("task_51", "Caching strategies", isCompleted = false, orderIndex = 2)
+                )
+            )
+        )
+    )
+
+    private val deploymentPath = Path(
+        id = "path_deployment",
+        title = "Deployment & Publishing",
+        description = "Ship your app to the world",
+        icon = R.drawable.badge_not_started,
+        badge = deploymentBadge,
+        orderIndex = 12,
+        isUnlocked = false,
+        topics = listOf(
+            Topic(
+                id = "topic_app_store",
+                title = "App Store Publishing",
+                orderIndex = 0,
+                tasks = listOf(
+                    Task("task_52", "Build configurations", isCompleted = false, orderIndex = 0),
+                    Task("task_53", "App store guidelines", isCompleted = false, orderIndex = 1),
+                    Task("task_54", "Creating store listings", isCompleted = false, orderIndex = 2)
+                )
+            ),
+            Topic(
+                id = "topic_cicd",
+                title = "CI/CD Pipelines",
+                orderIndex = 1,
+                tasks = listOf(
+                    Task("task_55", "Automated builds", isCompleted = false, orderIndex = 0),
+                    Task("task_56", "Release management", isCompleted = false, orderIndex = 1)
+                )
+            )
+        )
+    )
+
     val fullstackMobileCourse = Course(
         id = "course_fullstack_mobile",
         title = "Fullstack Mobile Engineer",
@@ -273,7 +507,13 @@ object MockLearningDataSource {
             mobileUIPath,
             deviceFeaturesPath,
             navigationPath,
-            stateManagementPath
+            stateManagementPath,
+            apiIntegrationPath,
+            databasePath,
+            authSecurityPath,
+            testingPath,
+            performancePath,
+            deploymentPath
         )
     )
 
@@ -286,7 +526,13 @@ object MockLearningDataSource {
         mobileUIBadge,
         deviceFeaturesBadge,
         navigationBadge,
-        stateManagementBadge
+        stateManagementBadge,
+        apiIntegrationBadge,
+        databaseBadge,
+        authSecurityBadge,
+        testingBadge,
+        performanceBadge,
+        deploymentBadge
     )
 
     val earnedBadges = allBadges.filter { it.isEarned }
