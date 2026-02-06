@@ -13,7 +13,7 @@ A modern Android learning path application built with Jetpack Compose, demonstra
 ### Video Preview
 
 <p align="center">
-  <img src="video/screen_record_full.gif" alt="App Demo" width="300"/>
+  <img src="video/Screen_recording.gif" alt="App Demo" width="300"/>
 </p>
 
 ### Google Drive Link
@@ -322,7 +322,7 @@ cd GreyAssesment
 - **Badge System** - Earn badges for completing learning paths
 - **Achievement Celebration** - Animated bottom sheet when earning a badge
 - **Progress Tracking** - Track completion across courses, paths, topics, and tasks
-
+* 🧪 **Github Action for building apk**
 ---
 
 ## License

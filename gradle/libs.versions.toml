@@ -8,7 +8,6 @@ coreSplashscreen = "1.0.1"
 # Compose
 activityCompose = "1.12.2"
 composeBom = "2025.08.00"
-kotlinxCollectionsImmutable = "0.4.0"
 navigationCompose = "2.9.3"
 
 lifecycleRuntimeKtx = "2.10.0"
@@ -21,10 +20,6 @@ hiltNavigation = "1.2.0"
 room = "2.7.2"
 ksp = "2.2.10-2.0.2"
 
-# Networking & Serialization
-ktor = "3.2.3"
-okhttpBom = "5.1.0"
-kotlinxSerializationJson = "1.9.0"
 kotlinxSerializationPlugin = "2.2.10"
 coil = "2.7.0"
 
@@ -71,31 +66,12 @@ hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", ve
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigation" }
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltNavigation" }
 
-# Ktor (Networking)
-kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
-ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
-ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
-ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
-ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
-ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
-ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
-ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
-ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
-ktor-serialization-kotlinx-xml = { module = "io.ktor:ktor-serialization-kotlinx-xml", version.ref = "ktor" }
-
-# Room (Database)
-androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
-androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
-androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
-androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
 
 # Coil (Image Loading)
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
-coil-video = { module = "io.coil-kt:coil-video", version.ref = "coil" }
 
-# Kotlin Serialization
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+
 
 # Utilities
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
@@ -132,28 +108,12 @@ compose-debug = [
     "androidx-compose-ui-test-manifest"
 ]
 
-# Use: implementation(libs.bundles.ktor)
-ktor = [
-    "ktor-client-core",
-    "ktor-client-cio",
-    "ktor-client-content-negotiation",
-    "ktor-serialization-kotlinx-json",
-    "ktor-client-logging",
-    "ktor-client-okhttp",
-    "ktor-client-auth"
-]
-
 # Use: implementation(libs.bundles.coil)
 coil = [
     "coil",
     "coil-compose"
 ]
 
-# Use: implementation(libs.bundles.room)
-room = [
-    "androidx-room-runtime",
-    "androidx-room-ktx"
-]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
