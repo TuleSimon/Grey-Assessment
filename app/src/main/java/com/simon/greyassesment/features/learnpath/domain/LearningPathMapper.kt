@@ -1,9 +1,9 @@
-package com.simon.greyassesment.features.learnpath
+package com.simon.greyassesment.features.learnpath.domain
 
 import com.simon.greyassesment.domain.model.Path
 import com.simon.greyassesment.domain.model.PathStatus
-import com.simon.greyassesment.features.learnpath.screens.BadgeState
-import com.simon.greyassesment.features.learnpath.screens.LevelNode
+import com.simon.greyassesment.features.learnpath.presentation.components.BadgeState
+import com.simon.greyassesment.features.learnpath.presentation.components.LevelNode
 
 object LearningPathMapper {
 

@@ -31,8 +31,7 @@ data class HomeUiState(
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getHomeDataUseCase: GetHomeDataUseCase,
-    private val completeTaskUseCase: CompleteTaskUseCase
+    private val getHomeDataUseCase: GetHomeDataUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -60,20 +59,7 @@ class HomeViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    fun onDailyTaskClick() {
-        // Navigate to task detail
-    }
 
-    fun onViewFullPathClick() {
-        // Navigate to learning path screen
-    }
-
-    fun completeCurrentTask() {
-        val taskId = _uiState.value.dailyTask?.task?.id ?: return
-        viewModelScope.launch {
-            completeTaskUseCase(taskId)
-        }
-    }
 
     private fun getGreeting(name: String): String {
         val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)

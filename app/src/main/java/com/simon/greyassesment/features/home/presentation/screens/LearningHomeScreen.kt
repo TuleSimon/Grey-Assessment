@@ -41,11 +41,14 @@ import com.simon.greyassesment.features.home.presentation.viewmodel.HomeViewMode
 import com.simon.greyassesment.ui.theme.GreyAssesmentTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 
+@Serializable
+data object LearningHomeScreenRoute
 @Composable
 fun LearningHomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    onNavigateToLearningPath: () -> Unit = {}
+    onNavigateToLearningPath: (String) -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
     LearningHomeScreenContent(
@@ -57,7 +60,7 @@ fun LearningHomeScreen(
 @Composable
 private fun LearningHomeScreenContent(
     state: HomeUiState,
-    onNavigateToLearningPath: () -> Unit = {}
+    onNavigateToLearningPath: (String) -> Unit = {}
 ) {
     var overLapHeight by remember { mutableStateOf(60.dp) }
 
@@ -137,7 +140,9 @@ private fun LearningHomeScreenContent(
                         .alpha(detailsAlpha.value)
                         .offset { IntOffset(0, detailsOffset.value.toInt()) },
                     activeLearningPath = state.activeLearningPath
-                )
+                ){
+                    onNavigateToLearningPath(it)
+                }
             }
         }
     }

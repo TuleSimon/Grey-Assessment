@@ -59,10 +59,13 @@ data class GreyColors(
     val border: Color = Color(0xFFE1E4EB),
     val borderVariant: Color = Color(0xFFF0F2F5),
     val borderAccent: Color = Color(0xFFCFD3FB),
+    val badgeTrack: Color = Color(0xFFE9F1FF),
+    val badgeProgress: Color = Color(0xFF2467E3),
 
     // Home specific
     val homeIconContainer: Color = Color(0x1f2467e3),
-    val homeIconTint: Color = Color(0xFF082F74)
+    val homeIconTint: Color = Color(0xFF082F74),
+    val pathStroke: Color = Color(0x4d000000)
 )
 
 val LocalGreyColors = staticCompositionLocalOf { GreyColors() }

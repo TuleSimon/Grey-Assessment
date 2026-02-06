@@ -1,4 +1,4 @@
-package com.simon.greyassesment.features.learnpath
+package com.simon.greyassesment.features.learnpath.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,9 +29,6 @@ class LearningPathViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(LearningPathUiState())
     val uiState: StateFlow<LearningPathUiState> = _uiState.asStateFlow()
 
-    init {
-        loadActiveCourse()
-    }
 
     private fun loadActiveCourse() {
         getLearningPathUseCase.getActiveCourse()
